@@ -1,1 +1,104 @@
 # Vision-Based-Autonomous-Driving-on-Raspberry-Pi
+
+## 1. Overview
+카메라 기반 CNN 모델을 활용하여 도로의 차선을 인식하고,  
+예측된 조향각을 통해 차량을 자율 주행시키는 시스템을 구현하였습니다.
+
+본 프로젝트는 perception → control로 이어지는  
+end-to-end 자율주행 파이프라인을 Raspberry Pi 환경에서 구현하는 것을 목표로 합니다.
+
+---
+
+## 2. System Architecture
+
+Camera → Frame Capture → CNN Inference → Steering Angle Prediction → Motor Control
+
+- Input: 실시간 카메라 영상
+- Output: 조향각 기반 모터 제어
+
+---
+
+## 3. Tech Stack
+
+### Hardware
+- Raspberry Pi (자율주행 차량 제어)
+- Camera Module
+
+### Software
+- Python
+- OpenCV (실시간 영상 처리 및 전처리)
+- PyTorch (CNN 기반 조향각 예측 모델 학습)
+
+### Environment
+- Google Colab (GPU 기반 학습 환경)
+- Raspberry Pi OS (실시간 추론 및 제어)
+- Samba (PC ↔ 라즈베리파이 데이터 전송)
+
+### Key Libraries
+- NumPy
+- Pandas
+- Matplotlib
+
+---
+
+## 4. Key Features
+
+- 실시간 영상 기반 자율 주행
+- CNN 기반 조향각 예측
+- Edge 환경(Raspberry Pi)에서 동작
+- 횡단보도 인식 후 정지 기능 구현
+
+---
+
+## 5. Data Collection
+
+- 직접 주행하며 데이터 수집 (약 4,000 ~ 24,000장)
+- 다양한 트랙 사용:
+  - D형 → 실패
+  - O형 → 성공 (데이터 균형 확보)
+  - 직각 코스 → 추가 학습
+
+### 핵심 개선 사항
+- 카메라 각도 조정 (시야 확장 및 왜곡 최소화)
+- 데이터 불균형 문제 해결 (좌/우 균형 맞춤)
+- 불필요한 직진 데이터 제거
+
+---
+
+## 6. Model
+
+- CNN 기반 조향각 회귀 모델
+- NVIDIA 모델과 비교 실험 수행
+
+### 선택 이유
+- 실시간 추론 가능
+- 경량화된 구조
+
+---
+
+## 7. Problems & Solutions
+
+### 1) 차량이 한 방향으로만 회전
+- 원인: 데이터 불균형
+- 해결: O형 트랙으로 좌/우 데이터 균형 확보
+
+### 2) 차선을 인식하지 못함
+- 원인: 카메라 시야 부족 및 노이즈
+- 해결: 카메라 각도 조정 + 임계값 튜닝
+
+### 3) 직각 코스 주행 실패
+- 원인: 데이터 부족 및 과적합
+- 해결: 직각 데이터 추가 수집
+
+### 4) 주행 불안정
+- 원인: 모델 출력값 해석 문제
+- 해결: 조향각 범위 재설정
+
+---
+
+## 8. Result
+
+- 직선 및 곡선 코스 안정적 주행
+- 횡단보도 인식 후 10초 정지 기능 구현
+- 실시간 환경에서 동작 가능한 수준 확보
+
