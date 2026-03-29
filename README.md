@@ -7,6 +7,17 @@
 본 프로젝트는 perception → control로 이어지는  
 end-to-end 자율주행 파이프라인을 Raspberry Pi 환경에서 구현하는 것을 목표로 합니다.
 
+### - Team Project
+
+본 프로젝트는 팀 프로젝트로 수행되었으며,  
+실제 구현 및 실험 과정은 개별 환경에서 진행되었습니다.  
+본 저장소는 해당 프로젝트에서 수행한 개인 구현 내용을 정리한 것입니다.
+
+### - My Contributions
+
+- 자율주행 실행 코드 구현 (CNN / NVIDIA 모델 기반)
+- 이미지 전처리 및 threshold 기반 차선 인식을 위한 코드 개선
+- 횡단보도 인식 후 정지 기능 구현
 ---
 
 ## 2. System Architecture
@@ -102,3 +113,62 @@ Camera → Frame Capture → CNN Inference → Steering Angle Prediction → Mot
 - 횡단보도 인식 후 10초 정지 기능 구현
 - 실시간 환경에서 동작 가능한 수준 확보
 
+---
+
+## 9. Project Structure
+
+```
+Vision-Based-Autonomous-Driving-on-Raspberry-Pi/
+├── 주행용/                 # 주행용 (실제 자율주행 실행)
+│   ├── nvidia_run.py
+│   └── worst_model.pth         # 횡단보도 인식 포함 모델
+│
+├── 학습용/                    # 주행 연습용 (기본 주행)
+│   ├── cnn_run.py
+│   └── best_model.pth          # 기본 주행 안정화 모델
+│
+└── cnn_make_model.ipynb    # 모델 학습 코드
+```
+
+---
+
+## 10. Execution Flow
+
+본 프로젝트는 **학습 → 배포 → 실행**의 구조로 동작합니다.
+
+### 1) Model Training
+- `cnn_make_model.ipynb`
+- 주행 데이터를 기반으로 CNN / NVIDIA 모델 학습
+
+### 2) Model Deployment
+- 학습된 `.pth` 모델을 Raspberry Pi로 이동
+
+### 3) Real-time Inference & Control
+- `nvidia_run.py` / `cnn_run.py`
+- 카메라 입력 → 모델 추론 → 모터 제어
+
+---
+
+## 11. Model Usage
+
+### CNN Model (기본 주행)
+- 파일: `cnn_run.py`
+- 모델: `best_model.pth`
+- 역할:
+  - 직선 및 곡선 주행 안정화
+  - 기본 자율주행 테스트
+
+---
+
+### NVIDIA Model (고도화 주행)
+- 파일: `nvidia_run.py`
+- 모델: `worst_model.pth`
+- 역할:
+  - 더 정교한 조향 제어
+  - 횡단보도 인식 후 정지 기능 포함
+
+---
+
+### Note
+- `.pth` 파일은 학습된 모델 가중치이며,
+  `run` 코드에서 로드되어 실시간 추론에 사용됩니다.
